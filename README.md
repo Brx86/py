@@ -25,7 +25,7 @@
    python calc.py 20165629
    ```
 
-   结果示例：https://note.aya1.top/bili/tuan/
+   结果示例：https://note.aya1.top/bili/tuan
    
    #### 注意事项：
    
