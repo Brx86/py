@@ -1,4 +1,4 @@
-import os, csv, calc, time, random, requests, threadpool
+import os, csv, time, random, requests, threadpool
 
 
 def getName(mid):

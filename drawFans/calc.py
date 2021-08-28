@@ -1,6 +1,6 @@
-import os, csv, json, time, requests
+import os, csv, time, requests
 from pyecharts import options as opts
-from pyecharts.charts import Page, Pie
+from py.charts import Page, Pie
 
 
 def getName(mid):
