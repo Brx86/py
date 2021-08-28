@@ -1,12 +1,12 @@
 import os, csv, time, requests
 from pyecharts import options as opts
-from py.charts import Page, Pie
+from pyecharts.charts import Page, Pie
 
 
 def getName(mid):
     userApi = f"https://api.bilibili.com/x/web-interface/card?mid={mid}"
     up = requests.get(userApi).json()["data"]
-    return = up["card"]["name"]
+    return up["card"]["name"]
 
 
 upMid = os.sys.argv[1]
