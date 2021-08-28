@@ -6,17 +6,11 @@ from py.charts import Page, Pie
 def getName(mid):
     userApi = f"https://api.bilibili.com/x/web-interface/card?mid={mid}"
     up = requests.get(userApi).json()["data"]
-    upName = up["card"]["name"]
-    upFans = int(up["follower"])
-    if upFans < 250:
-        upPages = int(upFans) // 50 + 1
-    else:
-        upPages = 5
-    return upName, upPages
+    return = up["card"]["name"]
 
 
 upMid = os.sys.argv[1]
-upDir = getName(upMid)[0]
+upDir = getName(upMid)
 
 lvList = [[f"lv{x}", 0] for x in range(7)]
 with open(f"{upDir}/fans.csv", "r") as f1:
