@@ -2,7 +2,6 @@ import os, csv, time, random, requests, threadpool
 
 
 def getName(mid):
-    global session
     userApi = f"https://api.bilibili.com/x/web-interface/card?mid={mid}"
     up = session.get(userApi).json()["data"]
     upName = up["card"]["name"]
@@ -15,19 +14,17 @@ def getName(mid):
 
 
 def getFans(mid, i):
-    global session
     print(f"Searching page {i+1}...")
     fansApi = f"http://api.bilibili.com/x/relation/followers?vmid={mid}&pn={i+1}"
     return session.get(fansApi).json()["data"]["list"]
 
 
 def getInfo(u):
-    global session
     userApi = f"http://api.bilibili.com/x/space/acc/info?mid={u['mid']}&jsonp"
     try:
         ui = session.get(userApi).json()["data"]
         print(f"UID: {u['mid']}\tLevel: {ui['level']}")
-        with open(f"{up[0]}/fans.csv", "a+") as f:
+        with open(f"{upMid}/{up[0]}.csv", "a+") as f:
             wCsv = csv.writer(f)
             wCsv.writerow(
                 [
@@ -50,13 +47,13 @@ if __name__ == "__main__":
     upMid = os.sys.argv[1]
     up = getName(upMid)
     uList, fList = [], []
-    if not os.path.exists(up[0]):
-        os.mkdir(up[0])
-    with open(f"{up[0]}/fans.csv", "w+") as f:
+    if not os.path.exists(upMid):
+        os.mkdir(upMid)
+    with open(f"{upMid}/{up[0]}.csv", "w+") as f:
         f.write("uid,mtime,uname,vipType,level,sex,sign\n")
     for i in range(up[1]):
         uList.extend(getFans(upMid, i))
-    pool = threadpool.ThreadPool(20)
+    pool = threadpool.ThreadPool(16)
     tasks = threadpool.makeRequests(getInfo, uList)
     [pool.putRequest(task) for task in tasks]
     pool.wait()
