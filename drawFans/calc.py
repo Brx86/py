@@ -29,8 +29,6 @@ for u in range(7):
 for u in range(7):
     lvList[u][1] = round(100 * lvList[u][1] / sumUsers, 2)
 
-# lvList.reverse()
-
 tTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() + 30))
 pie = (
     Pie()
