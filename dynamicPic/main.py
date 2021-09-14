@@ -12,7 +12,7 @@ def getPage(uid):
             timeout=5,
         ).json()["data"]
         yield str(page)
-        time.sleep(0.5)
+        time.sleep(0.4)
         offset = page["next_offset"]
         if page["has_more"]:
             print(f"已爬取第{p}页，下一页offset为{offset}")
