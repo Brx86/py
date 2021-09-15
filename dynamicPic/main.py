@@ -1,4 +1,4 @@
-import sys, re, time, requests
+import os, re, down, time, requests
 
 
 def getPage(uid):
@@ -39,8 +39,29 @@ def getCard(uid):
 def main(uid):
     global session
     session = requests.Session()
+    if os.path.exists(f"{uid}.txt"):
+        os.remove(f"{uid}.txt")
     getCard(uid)
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    if len(os.sys.argv) == 2:
+        main(os.sys.argv[1])
+    else:
+        while 1:
+            uid = input("请输入需要爬取的用户UID: ")
+            if uid.isnumeric():
+                break
+            else:
+                print("格式有误，请重新输入！")
+        while 1:
+            yn = input("爬取链接后是否下载? (y/n) ")
+            if yn == "y" or yn == "":
+                main(uid)
+                down.main(uid)
+                break
+            elif yn == "n":
+                main(uid)
+                break
+            else:
+                print("格式有误，请重新输入！")

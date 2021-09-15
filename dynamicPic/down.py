@@ -7,7 +7,7 @@ def bar():
     print(text, end="", flush=True)
 
 
-def downPic(line):
+def downPic(line, uid):
     global n
     url = line.strip()
     name = url.split("/")[-1]
@@ -18,7 +18,7 @@ def downPic(line):
     bar()
 
 
-def main():
+def main(uid):
     t0 = time.time()
     global n, total, session
     session = requests.Session()
@@ -29,7 +29,8 @@ def main():
         uList = f.readlines()
     total = len(uList)
     pool = threadpool.ThreadPool(8)
-    tasks = threadpool.makeRequests(downPic, uList)
+    tList = [([line, uid], 0) for line in uList]
+    tasks = threadpool.makeRequests(downPic, tList)
     [pool.putRequest(task) for task in tasks]
     pool.wait()
     cost = time.time() - t0
@@ -38,4 +39,4 @@ def main():
 
 if __name__ == "__main__":
     uid = os.sys.argv[1]
-    main()
+    main(uid)
