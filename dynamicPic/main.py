@@ -1,6 +1,12 @@
 import os, re, down, time, requests
 
 
+def getName(uid):
+    userApi = f"https://api.bilibili.com/x/web-interface/card?mid={uid}"
+    up = session.get(userApi).json()["data"]["card"]["name"]
+    print(f"正在爬取用户“{up}”的动态图片...")
+
+
 def getPage(uid):
     p, offset = 0, ""
     while 1:
@@ -11,10 +17,10 @@ def getPage(uid):
             params=params,
             timeout=5,
         ).json()["data"]
-        yield str(page)
-        time.sleep(0.4)
+        # time.sleep(0.4)
         offset = page["next_offset"]
         if page["has_more"]:
+            yield page["cards"]
             print(f"已爬取第{p}页，下一页offset为{offset}")
         else:
             print(f"共{p-1}页，爬取完成！")
@@ -24,15 +30,21 @@ def getPage(uid):
 def getCard(uid):
     num = 0
     pageGen = getPage(uid)
-    partten = re.compile(r"album\\\\/([0-9A-z]{40}).(jpg|png|gif)")
+    partten = re.compile(r"album\\/([0-9A-z]{40}).(jpg|png|gif)")
     for page in pageGen:
-        imgList = partten.findall(page)
-        if imgList:
-            for img in imgList:
-                num += 1
-                pic = f"{img[0]}.{img[1]}"
-                with open(f"{uid}.txt", "a+") as f:
-                    f.write(f"http://i0.hdslb.com/bfs/album/{pic}\n")
+        for card in page:
+            imgList = partten.findall(str(card["card"]))
+            if imgList:
+                x = 0
+                tTime = time.strftime(
+                    "%Y%m%d%H%M%S", time.localtime(card["desc"]["timestamp"])
+                )
+                for img in imgList:
+                    x += 1
+                    num += 1
+                    pic = f"{img[0]}.{img[1]}"
+                    with open(f"{uid}.txt", "a+") as f:
+                        f.write(f"{tTime}-{x},http://i0.hdslb.com/bfs/album/{pic}\n")
     print(f"总共有{num}张图片！")
 
 
@@ -41,6 +53,7 @@ def main(uid):
     session = requests.Session()
     if os.path.exists(f"{uid}.txt"):
         os.remove(f"{uid}.txt")
+    getName(uid)
     getCard(uid)
 
 

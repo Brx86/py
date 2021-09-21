@@ -9,10 +9,12 @@ def bar():
 
 def downPic(line, uid):
     global n
-    url = line.strip()
-    name = url.split("/")[-1]
+    line = line.split(",")
+    url = line[1].strip()
+    fileType = url.split(".")[-1]
+    fileName = f"{line[0]}.{fileType}"
     raw = session.get(url)
-    with open(f"{uid}/{name}", "wb+") as f:
+    with open(f"{uid}/{fileName}", "wb+") as f:
         f.write(raw.content)
     n += 1
     bar()
