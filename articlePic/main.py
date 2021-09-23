@@ -16,11 +16,11 @@ class Spyder:
         api = f"https://api.bilibili.com/x/space/article?mid={self.uid}&pn={pn}"
         data = self.session.get(api).json()["data"]
         pages = int(data["count"]) // 30 + 1
-        print(f"Getting page {pn}/{pages}...")
+        print(f"正在获取专栏列表 {pn}/{pages}...")
         cvList.extend(data["articles"])
         while pn < pages:
             pn += 1
-            print(f"Getting page {pn}/{pages}...")
+            print(f"正在获取专栏列表 {pn}/{pages}...")
             api = f"https://api.bilibili.com/x/space/article?mid={self.uid}&pn={pn}"
             data = self.session.get(api).json()["data"]
             cvList.extend(data["articles"])
@@ -32,25 +32,21 @@ class Spyder:
         html = self.session.get(f"https://www.bilibili.com/read/cv{cvid}")
         partten = re.compile(r"article\/([0-9A-z]{40}).(jpg|png|gif)")
         imgList = partten.findall(html.text)
-        print(f"正在处理cv{cvid}: [{self.title}]")
+        if pTime:
+            print(f"正在处理cv{cvid}: [{self.title}]")
         if imgList:
             self.write(imgList, pTime)
 
     def write(self, imgList, pTime):
-        x = 0
-        tTime = time.strftime("%Y%m%d%H%M%S", time.localtime(pTime))
-        if self.yn == "1":
-            fName = f"uid{self.uid}.txt"
-        else:
-            fName = f"cv{self.uid}.txt"
+        x, form = 0, "%Y%m%d%H%M%S"
+        tTime = time.strftime(form, time.localtime(pTime)) if pTime else self.uid
+        fName = f"uid{self.uid}.txt" if self.yn == "1" else f"cv{self.uid}.txt"
         for img in imgList:
             x += 1
             self.num += 1
-            pic = f"{img[0]}.{img[1]}"
             with open(fName, "a+") as f:
-                f.write(
-                    f"{self.title},{tTime}-{x},http://i0.hdslb.com/bfs/article/{pic}\n"
-                )
+                url = f"http://i0.hdslb.com/bfs/article/{img[0]}.{img[1]}\n"
+                f.write(f"{self.title},{tTime}-{x},{url}")
 
     def main(self, uid, yn):
         self.num, self.uid, self.yn = 0, uid, yn
@@ -65,6 +61,8 @@ class Spyder:
                 self.getUrl(cv["id"], cv["publish_time"])
             print(f"总共有{self.num}张图片！")
         else:
+            self.title = 0
+            self.getUrl(uid, 0)
             pass
 
 
@@ -98,14 +96,10 @@ class Down:
             await asyncio.gather(*tasks)
 
     def run(self, uid, yn):
-        if yn == "1":
-            self.name = f"uid{uid}"
-        else:
-            self.name = f"cv{uid}"
-        s = time.time()
+        self.name = f"uid{uid}" if yn == "1" else f"cv{uid}"
+        start = time.time()
         asyncio.run(self.main())
-        e = time.time()
-        print(f"\n执行结束，耗时{e-s:.2f}s")
+        print(f"\n下载完成，总用时 {time.time()-start:.2f}s")
 
 
 if __name__ == "__main__":
