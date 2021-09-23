@@ -3,8 +3,8 @@ import os, re, time, requests, asyncio, aiohttp
 
 class Spyder:
     def vaTitle(self, title):
-        rstr = r"[\/\\\:\*\?\"\<\>\|]"  # '/ \ : * ? " < > |'
-        self.title = re.sub(rstr, "_", title)  # 替换为下划线
+        rstr = r"[\/\\\:\*\?\"\<\>\|]"
+        self.title = re.sub(rstr, "_", title)
 
     def getName(self):
         userApi = f"https://api.bilibili.com/x/web-interface/card?mid={self.uid}"
@@ -99,12 +99,12 @@ class Down:
         self.name = f"uid{uid}" if yn == "1" else f"cv{uid}"
         start = time.time()
         asyncio.run(self.main())
-        print(f"\n下载完成，总用时 {time.time()-start:.2f}s")
+        print(f"\n全部图片下载完成，用时 {time.time()-start:.2f}s")
 
 
 if __name__ == "__main__":
     while 1:
-        yn = input("请选择爬取内容(输入1/2)：\n    1.指定用户的全部专栏图片\n    2.指定单个专栏的全部图片\n")
+        yn = input("请选择爬取内容(输入1/2): \n    1.指定用户的全部专栏图片\n    2.指定单个专栏的全部图片\n")
         if yn == "1" or yn == "2":
             break
         else:
@@ -128,3 +128,4 @@ if __name__ == "__main__":
             break
         else:
             print("格式有误，请重新输入y或n!")
+    fine = input("\n按回车键退出...")

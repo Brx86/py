@@ -1,4 +1,42 @@
-import os, re, down, time, requests
+import os, re, time, requests, threadpool
+
+
+def bar():
+    val = 50 * n / total
+    text = f" {val/50:.2%}[{'='*int(val)}>{' '*(50-int(val))}] {n} of {total}\r"
+    print(text, end="", flush=True)
+
+
+def downPic(line, uid):
+    global n
+    line = line.split(",")
+    url = line[1].strip()
+    fileType = url.split(".")[-1]
+    fileName = f"{line[0]}.{fileType}"
+    raw = session.get(url)
+    with open(f"{uid}/{fileName}", "wb+") as f:
+        f.write(raw.content)
+    n += 1
+    bar()
+
+
+def down(uid):
+    t0 = time.time()
+    global n, total, session
+    session = requests.Session()
+    n = 0
+    if not os.path.exists(uid):
+        os.mkdir(uid)
+    with open(f"{uid}.txt", "r") as f:
+        uList = f.readlines()
+    total = len(uList)
+    pool = threadpool.ThreadPool(8)
+    tList = [([line, uid], 0) for line in uList]
+    tasks = threadpool.makeRequests(downPic, tList)
+    [pool.putRequest(task) for task in tasks]
+    pool.wait()
+    cost = time.time() - t0
+    print(f"\n全部图片下载完成，用时{cost:.2f}秒!")
 
 
 def getName(uid):
@@ -23,7 +61,7 @@ def getPage(uid):
             yield page["cards"]
             print(f"已爬取第{p}页，下一页offset为{offset}")
         else:
-            print(f"共{p-1}页，爬取完成！")
+            print(f"共{p-1}页，爬取完成!")
             break
 
 
@@ -45,7 +83,7 @@ def getCard(uid):
                     pic = f"{img[0]}.{img[1]}"
                     with open(f"{uid}.txt", "a+") as f:
                         f.write(f"{tTime}-{x},http://i0.hdslb.com/bfs/album/{pic}\n")
-    print(f"总共有{num}张图片！")
+    print(f"总共有{num}张图片!")
 
 
 def main(uid):
@@ -58,23 +96,21 @@ def main(uid):
 
 
 if __name__ == "__main__":
-    if len(os.sys.argv) == 2:
-        main(os.sys.argv[1])
-    else:
-        while 1:
-            uid = input("请输入需要爬取的用户UID: ")
-            if uid.isnumeric():
-                break
-            else:
-                print("格式有误，请重新输入！")
-        while 1:
-            yn = input("爬取链接后是否下载? (y/n) ")
-            if yn == "y" or yn == "":
-                main(uid)
-                down.main(uid)
-                break
-            elif yn == "n":
-                main(uid)
-                break
-            else:
-                print("格式有误，请重新输入！")
+    while 1:
+        uid = input("请输入需要爬取的用户UID: ")
+        if uid.isnumeric():
+            break
+        else:
+            print("格式有误，请重新输入!")
+    while 1:
+        yn = input("爬取链接后是否下载? (y/n) ")
+        if yn == "y" or yn == "":
+            main(uid)
+            down(uid)
+            break
+        elif yn == "n":
+            main(uid)
+            break
+        else:
+            print("格式有误，请重新输入!")
+    fine = input("\n按回车键退出...")
