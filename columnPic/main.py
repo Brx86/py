@@ -15,7 +15,7 @@ class Spyder:
         pn, cvList = 1, []
         api = f"https://api.bilibili.com/x/space/article?mid={self.uid}&pn={pn}"
         data = self.session.get(api).json()["data"]
-        pages = int(data["count"]) // 30 + 1
+        pages = (int(data["count"]) - 1) // 30 + 1
         print(f"正在获取专栏列表 {pn}/{pages}...")
         cvList.extend(data["articles"])
         while pn < pages:
