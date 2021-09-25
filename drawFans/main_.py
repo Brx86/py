@@ -24,7 +24,7 @@ class Spyder:
             self.upPages = 5
 
     def getFans(self, pn):
-        print(f"Page {pn+1}...")
+        print(f"正在获取列表 {pn+1}/{self.upPages}...")
         fansApi = (
             f"http://api.bilibili.com/x/relation/followers?vmid={self.mid}&pn={pn+1}"
         )
@@ -85,7 +85,7 @@ class Spyder:
             .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}%"))
         )
         pie.render(f"{self.mid}/index.html")
-        print("Chart Generated!")
+        print("统计图已生成! ")
 
     async def main(self):
         uList = []
@@ -99,7 +99,7 @@ class Spyder:
             tasks = [self.getInfo(client, u) for u in uList]
             await asyncio.gather(*tasks)
         if self.status:
-            print(f"{self.upName} Finished！")
+            print(f"{self.upName} 已完成!")
             self.draw()
         else:
             print("查询失败，请等待十分钟再次尝试")
@@ -107,7 +107,7 @@ class Spyder:
     def run(self):
         start = time.time()
         asyncio.run(self.main())
-        print(f"Cost {time.time()-start} secs")
+        print(f"用时{time.time()-start:.2f}秒")
 
 
 if __name__ == "__main__":

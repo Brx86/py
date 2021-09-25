@@ -15,19 +15,36 @@
 
    #### 第三方库: 
 
-   requests, threadpool, pyecharts
+   requests, asyncio, aiohttp, pyecharts
 
    #### 使用方法: 
 
+   在当前文件夹执行`python main_.py`或直接双击运行main_.py, 按照提示操作
+
+   **例如:**
+
+   爬取“共青团中央”最近250个粉丝的用户数据, 保存到"20165629/共青团中央.csv", 可用excel等表格软件打开
+
+   处理csv, 计算并绘制饼图, 保存到"20165629/index.html", 可用浏览器打开
+
    ```
-   python main.py <UID>
-   python calc.py <UID>
+   请输入需要爬取的用户uid: 5
+   正在获取列表 1/5...
+   正在获取列表 2/5...
+   正在获取列表 3/5...
+   正在获取列表 4/5...
+   正在获取列表 5/5...
+   UID: 343098075  Level: 2
+   UID: 454575346  Level: 2
+   UID: 415297010  Level: 3
+   UID: 419828952  Level: 3
+   UID: 2078286313 Level: 2
+   ......
+   共青团中央 已完成!
+   统计图已生成! 
+   用时1.83秒
    
-   # 例如: 
-   # 爬取共青团中央最近250个粉丝的用户数据, 保存到"共青团中央/fans.csv", 可用excel等表格软件打开
-   python main.py 20165629
-   # 处理csv, 计算并绘制饼图, 保存到"共青团中央/pie.html", 可用浏览器打开
-   python calc.py 20165629
+   按回车键退出...
    ```
 
    结果示例: https://note.aya1.top/bili/tuan
