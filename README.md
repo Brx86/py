@@ -98,7 +98,7 @@
 
    #### 第三方库: 
 
-   requests, asyncio, aiohttp
+   requests, threadpool
 
    #### 使用方法: 
 
