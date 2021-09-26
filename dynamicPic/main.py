@@ -36,13 +36,16 @@ def down(uid):
     [pool.putRequest(task) for task in tasks]
     pool.wait()
     cost = time.time() - t0
-    print(f"\n全部图片下载完成，用时{cost:.2f}秒!")
+    print(f"\n全部图片下载完成, 用时{cost:.2f}秒!")
 
 
 def getName(uid):
     userApi = f"https://api.bilibili.com/x/web-interface/card?mid={uid}"
-    up = session.get(userApi).json()["data"]["card"]["name"]
-    print(f"正在爬取用户“{up}”的动态图片...")
+    try:
+        up = session.get(userApi).json()["data"]["card"]["name"]
+    except TypeError:
+        print("该用户不存在!")
+    print(f"正在抓取用户“{up}”的动态图片...")
 
 
 def getPage(uid):
@@ -58,10 +61,10 @@ def getPage(uid):
         # time.sleep(0.4)
         offset = page["next_offset"]
         if page["has_more"]:
+            print(f"正在处理第{p}页, 下一页offset为{offset}")
             yield page["cards"]
-            print(f"已爬取第{p}页，下一页offset为{offset}")
         else:
-            print(f"共{p-1}页，爬取完成!")
+            print(f"共{p-1}页, 爬取完成!")
             break
 
 
@@ -83,7 +86,12 @@ def getCard(uid):
                     pic = f"{img[0]}.{img[1]}"
                     with open(f"{uid}.txt", "a+") as f:
                         f.write(f"{tTime}-{x},http://i0.hdslb.com/bfs/album/{pic}\n")
-    print(f"总共有{num}张图片!")
+    if num:
+        print(f"总共有{num}张图片!")
+    else:
+        print("该用户动态没有图片!")
+        fine = input("\n按回车键退出...")
+        exit()
 
 
 def main(uid):
@@ -101,7 +109,7 @@ if __name__ == "__main__":
         if uid.isnumeric():
             break
         else:
-            print("格式有误，请重新输入!")
+            print("格式有误, 请重新输入!")
     while 1:
         yn = input("爬取链接后是否下载? (y/n) ")
         if yn == "y" or yn == "":
@@ -112,5 +120,5 @@ if __name__ == "__main__":
             main(uid)
             break
         else:
-            print("格式有误，请重新输入!")
+            print("格式有误, 请重新输入!")
     fine = input("\n按回车键退出...")
