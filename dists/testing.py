@@ -4,7 +4,7 @@ import time, httpx, asyncio, aiohttp
 class Down:
     def __init__(self):
         self.fi = 0
-        self.total = 400
+        self.total = 200
         url = "https://ayatale.coding.net/p/picbed/d/kemo/git/raw/master/"
         self.urls = [f"{url}{_}.jpg" for _ in range(self.total)]
 
