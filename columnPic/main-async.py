@@ -15,7 +15,12 @@ class Spyder:
         pn, cvList = 1, []
         api = f"https://api.bilibili.com/x/space/article?mid={self.uid}&pn={pn}"
         data = self.session.get(api).json()["data"]
-        pages = (int(data["count"]) - 1) // 30 + 1
+        try:
+            pages = (int(data["count"]) - 1) // 30 + 1
+        except KeyError:
+            print("该用户没有专栏!")
+            fine = input("\n按回车键退出...")
+            exit()
         print(f"正在获取专栏列表 {pn}/{pages}...")
         cvList.extend(data["articles"])
         while pn < pages:
@@ -77,7 +82,7 @@ class Down:
         url = line[2].strip()
         fileType = url.split(".")[-1]
         fileName = f"{line[1]}.{fileType}"
-        r = await self.session.get(url)
+        r = await self.client.get(url)
         raw = await r.read()
         with open(f"{self.name}/{fileName}", "wb+") as f:
             f.write(raw)
@@ -86,7 +91,7 @@ class Down:
 
     async def main(self):
         self.fi = 0
-        async with aiohttp.ClientSession() as self.session:
+        async with aiohttp.ClientSession() as self.client:
             if not os.path.exists(self.name):
                 os.mkdir(self.name)
             with open(f"{self.name}.txt", "r") as f:
