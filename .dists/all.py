@@ -39,6 +39,8 @@ class Spyder:
         imgList = partten.findall(html.text)
         if pTime:
             print(f"正在处理cv{cvid}: [{self.title}]")
+        else:
+            print(f"正在处理cv{cvid}...")
         if imgList:
             self.write(imgList, pTime)
 
@@ -68,7 +70,6 @@ class Spyder:
         else:
             self.title = 0
             self.getUrl(uid, 0)
-            pass
 
 
 class Dynamic:
