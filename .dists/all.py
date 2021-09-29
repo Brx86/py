@@ -39,7 +39,7 @@ class Spyder:
         partten = re.compile(r"article\/([0-9A-z]{40}).(jpg|png|gif)")
         imgList = partten.findall(html.text)
         if pTime:
-            print(f"正在处理cv{cvid}: [{self.title}]")
+            print(f"正在处理cv{cvid}:\t[{self.title}]")
         else:
             print(f"正在处理cv{cvid}...")
             if imgList:
