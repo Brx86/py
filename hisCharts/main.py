@@ -1,12 +1,14 @@
 import os, csv, time, requests
 from pyecharts import options as opts
-from pyecharts.charts import Pie, Page, WordCloud
+from pyecharts.charts import Pie, WordCloud
 import platform
 
+cookie = input("Please input your cookie: ")
 headers = {
-    "cookie": "buvid3=9923EC96-6FCC-5EC8-B06F-837C8DD0599C26087infoc; CURRENT_FNVAL=80; _uuid=F214B2B2-BD8C-C108-C5C9-49C3FD767B7B26428infoc; blackside_state=1; rpdid=|(k|kmku~u|u0J'uYk)R)l|km; sid=9zz28kep; fingerprint=cf5e667025e31a8994a65020aa241f37; buvid_fp=9923EC96-6FCC-5EC8-B06F-837C8DD0599C26087infoc; buvid_fp_plain=9923EC96-6FCC-5EC8-B06F-837C8DD0599C26087infoc; SESSDATA=98a40580%2C1646962507%2C5526d%2A91; bili_jct=4c385f2aba2dd256cd93f8dce6b05ba2; DedeUserID=25773550; DedeUserID__ckMd5=443fa8253a08a5d6; PVID=1; bp_t_offset_25773550=575134066971618448; balh_server_inner=__custom__; balh_is_closed=; LIVE_BUVID=AUTO7316327467091875; fingerprint3=40102fa238adc44617b15b33fa39bac7; fingerprint_s=4f6f115e7d3e7807c05f3063572adab0; innersign=0; bsource=search_baidu; bfe_id=0c3a1998eda2972db3dbce4811a80de6"
+    # "cookie": "buvid3=9923EC96-6FCC-5EC8-B06F-837C8DD0599C26087infoc; CURRENT_FNVAL=80; _uuid=F214B2B2-BD8C-C108-C5C9-49C3FD767B7B26428infoc; blackside_state=1; rpdid=|(k|kmku~u|u0J'uYk)R)l|km; sid=9zz28kep; fingerprint=cf5e667025e31a8994a65020aa241f37; buvid_fp=9923EC96-6FCC-5EC8-B06F-837C8DD0599C26087infoc; buvid_fp_plain=9923EC96-6FCC-5EC8-B06F-837C8DD0599C26087infoc; SESSDATA=98a40580%2C1646962507%2C5526d%2A91; bili_jct=4c385f2aba2dd256cd93f8dce6b05ba2; DedeUserID=25773550; DedeUserID__ckMd5=443fa8253a08a5d6; PVID=1; bp_t_offset_25773550=575134066971618448; balh_server_inner=__custom__; balh_is_closed=; LIVE_BUVID=AUTO7316327467091875; fingerprint3=40102fa238adc44617b15b33fa39bac7; fingerprint_s=4f6f115e7d3e7807c05f3063572adab0; innersign=0; bsource=search_baidu; bfe_id=0c3a1998eda2972db3dbce4811a80de6"
+    "cookie": cookie
 }
-
+    
 
 class Spyder:
     def __init__(self):
@@ -32,7 +34,7 @@ class Spyder:
                 f"https://api.bilibili.com/x/web-interface/history/cursor?max={max_}&view_at={at_}",
                 headers=headers,
             ).json()["data"]
-            time.sleep(0.4)
+            # time.sleep(0.4)
             yield page
             max_ = page["cursor"]["max"]
             at_ = page["cursor"]["view_at"]
@@ -44,10 +46,10 @@ class Spyder:
 
     def run(self):
         hisGen = self.getPage()
-        with open("history.csv", "w+") as f:
+        with open("history.csv", "w+", encoding="utf-8") as f:
             f.write("avid,title,author,authorID,tagName,viewTime\n")
-        with open("history.csv", "a+") as f:
-            wCsv = csv.writer(f)
+        with open("history.csv", "a+", encoding="utf-8") as f:
+            wCsv = csv.writer(f, lineterminator="\n")
             for his in hisGen:
                 for v in his["list"]:
                     vInfo = self.getVideo(v)
@@ -63,7 +65,7 @@ class Draw:
 
     def readData(self):
         tagDict = {}
-        with open("history.csv", "r") as f:
+        with open("history.csv", "r", encoding="utf-8") as f:
             rCsv = csv.reader(f)
             for line in rCsv:
                 self.total += 1
