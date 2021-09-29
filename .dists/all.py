@@ -1,4 +1,5 @@
 import os, re, time, requests, threadpool
+from sys import exit
 
 
 class Spyder:
@@ -254,11 +255,12 @@ if __name__ == "__main__":
             print("格式有误，请重新输入纯数字!")
     while 1:
         judge = input("爬取链接后是否下载? (y/n) ")
-        Spyder().main(uid, yn)
         if judge == "y" or judge == "":
+            Spyder().main(uid, yn)
             Down().run(uid, yn)
             break
         elif judge == "n":
+            Spyder().main(uid, yn)
             break
         else:
             print("格式有误，请重新输入y或n!")
