@@ -41,25 +41,31 @@ class Spyder:
             print(f"正在处理cv{cvid}: [{self.title}]")
         else:
             print(f"正在处理cv{cvid}...")
+            if imgList:
+                print(f"总共{len(imgList)}张图片!")
+            else:
+                print("该专栏没有图片!")
         if imgList:
             self.write(imgList, pTime)
 
     def write(self, imgList, pTime):
         x, form = 0, "%Y%m%d%H%M%S"
         tTime = time.strftime(form, time.localtime(pTime)) if pTime else self.uid
-        fName = f"uid{self.uid}.txt" if self.yn == "1" else f"cv{self.uid}.txt"
         for img in imgList:
             x += 1
             self.num += 1
-            with open(fName, "a+") as f:
+            with open(self.fName, "a+") as f:
                 url = f"http://i0.hdslb.com/bfs/article/{img[0]}.{img[1]}\n"
                 f.write(f"{self.title},{tTime}-{x},{url}")
 
     def main(self, uid, yn):
         self.num, self.uid, self.yn = 0, uid, yn
+        self.fName = f"uid{self.uid}.txt" if self.yn == "1" else f"cv{self.uid}.txt"
         self.session = requests.session()
-        self.getName()
+        if os.path.exists(self.fName):
+            os.remove(self.fName)
         if yn == "1":
+            self.getName()
             cvList = self.getList()
             if os.path.exists(f"{self.uid}.txt"):
                 os.remove(f"{self.uid}.txt")
