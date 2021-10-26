@@ -1,5 +1,4 @@
 .vscode
-<<<<<<< HEAD
 .dists/releases
 */env
 hisCharts/main-aya.py
@@ -7,7 +6,4 @@ hisCharts/main-aya.py
 *.png
 *.gif
 *.exe
-=======
-*/env
-hisCharts/main-aya.py
->>>>>>> 9bd69f326b76cc6160c4136d590281823cbc22ab
+test
