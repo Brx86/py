@@ -48,3 +48,4 @@ if __name__ == "__main__":
     ipv6 = requests.get("http://ipv6.icanhazip.com").text.strip()
     print(f"Current IP: {ipv6}")
     ddns_request(ipv6, zone, dns_records)
+    input("按回车键退出...")
