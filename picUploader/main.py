@@ -32,15 +32,34 @@ def image_upload(file_path):
         timeout=300,
     )
 
-    # 解析返回值，得到图片链接并请求api得到短链接
+    # 解析返回值，得到图片链接
     img_url = r.json()["data"]["image_url"]
-
-    r = requests.get(f"https://bili.fan/api/bili.php?b23tvurl={img_url}")
-    short_url = r.json()["data"]["content"]
+    short_url = b23_link(img_url)
 
     # 输出结果
     print(f"图片链接: {img_url}\n短网址:   {short_url}")
     return img_url, short_url
+
+
+# 定义b23短链函数
+def b23_link(url):
+    # api地址
+    api_url = "https://api.bilibili.com/x/share/click"
+
+    # 设置post参数
+    data = {
+        "build": 10000,
+        "buvid": "archlinux",
+        "platform": "archlinux",
+        "share_channel": "COPY",
+        "share_id": "public.webview.0.0.pv",
+        "share_mode": 1,
+        "oid": url,
+    }
+
+    # 请求api得到短链接
+    r = requests.post(api_url, data=data)
+    return r.json()["data"]["content"]
 
 
 if __name__ == "__main__":
